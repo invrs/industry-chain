@@ -2,29 +2,22 @@ import { returnObject } from "standard-io"
 
 function each({ args }) {
   return (...chains) => {
-    let rand = Math.floor(Math.random() * (100 + 1))
     let promise
 
     chains.forEach(c => {
       if (promise) {
         promise = promise
           .then(() => c(args))
-          .then(value => {
-            mergeArgs({ args, value })
-            return args
-          })
+          .then(thenMergeArgs(args))
       } else {
         if (typeof c == "function") {
           c = c(args)
         }
         if (!c) {
-          // do nothing
+          return
         } else if (c.async || (c.value == undefined && c.then)) {
           args.async = true
-          promise = c.then(value => {
-            mergeArgs({ args, value })
-            return args
-          })
+          promise = c.then(thenMergeArgs(args))
         } else {
           mergeArgs({ args, value: c })
         }
@@ -32,6 +25,7 @@ function each({ args }) {
     })
 
     promise = promise || Promise.resolve(args)
+    
     let output = returnObject({ value: args })
     output.then = promise.then.bind(promise)
 
@@ -48,6 +42,13 @@ function mergeArgs({ args, value={} }) {
     }
   } else {
     args.value = value
+  }
+}
+
+function thenMergeArgs(args) {
+  return value => {
+    mergeArgs({ args, value })
+    return args
   }
 }
 
