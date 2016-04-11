@@ -55,10 +55,12 @@ function patch(ignore) {
   for (let name in this.functions()) {
     if (ignore.indexOf(name) == -1) {
       let fn = this[name]
-      this[name] = (args) =>
+      this[name] = (args) => {
         args.chain = {
           each: each({ args: args.args })
         }
+        return fn.bind(this)(args)
+      }
     }
   }
 }

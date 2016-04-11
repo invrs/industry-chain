@@ -2,7 +2,7 @@ import { factory } from "industry"
 import { instance } from "industry-instance"
 import { functions } from "industry-functions"
 import { standard_io } from "industry-standard-io"
-import { chain} from "../../"
+import { chain } from "../../"
 
 describe("IndustryChain", () => {
   function makeTest() {
@@ -22,11 +22,11 @@ describe("IndustryChain", () => {
       e() { return { e: 5 } }
       f({ promise: { resolve } }) { resolve({ f: 6 }) }
       empty({ value }) { return value || true }
-      chain({ promise: { chain } }) { return chain(this.c, this.empty, this.d) }
+      chain({ chain: { each } }) { return each(this.c, this.empty, this.d) }
 
-      run({ promise: { chain } }) {
-        return chain(
-          chain(this.a, this.empty),
+      run({ chain: { each } }) {
+        return each(
+          each(this.a, this.empty),
           this.b, this.chain, this.e, this.f
         )
       }
@@ -52,8 +52,8 @@ describe("IndustryChain", () => {
       a() { return "a" }
       b({ promise: { resolve } }) { resolve("b") }
 
-      run({ promise: { chain } }) {
-        return chain(this.a, this.b)
+      run({ chain: { each } }) {
+        return each(this.a, this.b)
       }
     }
 
@@ -68,15 +68,15 @@ describe("IndustryChain", () => {
       c() { return { c: 3 } }
       d() { return { d: 4 } }
 
-      chain({ promise: { chain } }) {
-        return chain(this.c, this.d)
+      chain({ chain: { each } }) {
+        return each(this.c, this.d)
       }
 
-      chain2({ promise: { chain } }) {
-        return chain(this.a, this.b, this.chain)
+      chain2({ chain: { each } }) {
+        return each(this.a, this.b, this.chain)
       }
 
-      run({ promise: { chain } }) {
+      run() {
         return this.chain2()
       }
     }

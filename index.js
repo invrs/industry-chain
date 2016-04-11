@@ -1,1 +1,1 @@
-module.exports = require("./lib/industry-chain").default
+module.exports = require("./lib/industry-chain")
