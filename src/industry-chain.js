@@ -25,7 +25,7 @@ function each({ args }) {
     })
 
     promise = promise || Promise.resolve(args)
-    
+
     let output = returnObject({ value: args })
     output.then = promise.then.bind(promise)
 
@@ -45,13 +45,6 @@ function mergeArgs({ args, value={} }) {
   }
 }
 
-function thenMergeArgs(args) {
-  return value => {
-    mergeArgs({ args, value })
-    return args
-  }
-}
-
 function patch(ignore) {
   for (let name in this.functions()) {
     if (ignore.indexOf(name) == -1) {
@@ -63,6 +56,13 @@ function patch(ignore) {
         return fn.bind(this)(args)
       }
     }
+  }
+}
+
+function thenMergeArgs(args) {
+  return value => {
+    mergeArgs({ args, value })
+    return args
   }
 }
 
