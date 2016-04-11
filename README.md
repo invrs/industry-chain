@@ -22,20 +22,24 @@ let test = factory()
   .set("standard_io", standard_io)
   .base(class {
     getHello() { return { hello: "hello" } }
+    
     getWorld({ promise: { resolve } }) {
       setTimeout(() => resolve({ world: "world" }), 10)
     }
+    
     isExclaming({ exclaim }) { return !!exclaim }
+    
     addExclamation({ world }) { return { world: `${world}!` } }
+    
     log({ hello, world }) { console.log(`${hello} ${world}`) }
 
-    hello({ chain: { each, all, if } }) {
+    hello({ chain: { each, all, ifElse } }) {
       return each(
         all(
           this.getHello,
           this.getWorld,
         ),
-        if(
+        ifElse(
           this.isExclaming,
           this.addExclamation
         ),
