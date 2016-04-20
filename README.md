@@ -27,27 +27,17 @@ let test = factory()
       setTimeout(() => resolve({ world: "world" }), 10)
     }
     
-    isExclaming({ exclaim }) { return !!exclaim }
-    
-    addExclamation({ world }) { return { world: `${world}!` } }
-    
     log({ hello, world }) { console.log(`${hello} ${world}`) }
 
-    hello({ chain: { each, all, ifElse } }) {
+    hello({ chain: { each } }) {
       return each(
-        all(
-          this.getHello,
-          this.getWorld,
-        ),
-        ifElse(
-          this.isExclaming,
-          this.addExclamation
-        ),
+        this.getHello,
+        this.getWorld,
         this.log
       )
     }
   })
 
-test().hello({ exclaim: true })
+test().hello()
   // hello world!
 ```
