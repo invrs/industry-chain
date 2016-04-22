@@ -34,10 +34,10 @@ class Test {
 }
 
 let test = factory(Test)
-  .set("chain", chain)
   .set("instance", instance)
   .set("functions", functions)
   .set("standard_io", standard_io)
+  .set("chain", chain)
 
 test().hello()
   // hello world!
