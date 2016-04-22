@@ -15,13 +15,7 @@ import { instance } from "industry-instance"
 import { functions } from "industry-functions"
 import { standard_io } from "industry-standard-io"
 
-let test = factory()
-  .set("chain", chain)
-  .set("instance", instance)
-  .set("functions", functions)
-  .set("standard_io", standard_io)
-
-test = test(class {
+class Test {
   getHello() { return { hello: "hello" } }
   
   getWorld({ promise: { resolve } }) {
@@ -37,7 +31,13 @@ test = test(class {
       this.log
     )
   }
-})
+}
+
+let test = factory(Test)
+  .set("chain", chain)
+  .set("instance", instance)
+  .set("functions", functions)
+  .set("standard_io", standard_io)
 
 test().hello()
   // hello world!
