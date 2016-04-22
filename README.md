@@ -1,10 +1,10 @@
 # IndustryChain [![Build Status](https://travis-ci.org/invrs/industry-chain.svg?branch=master)](https://travis-ci.org/invrs/industry-chain)
 
-Used with [IndustryStandardIO](https://github.com/invrs/industry-standard-io) to chain synchronous or asynchronous functions in a shared namespace.
+Chain synchronous or async methods using a common parameter namespace.
 
 ## Requirements
 
-This extension must be paired with [IndustryStandardIO](https://github.com/invrs/industry-standard-io) and [IndustryFunctions](https://github.com/invrs/industry-functions).
+This extension must be paired with [StandardIO](https://github.com/invrs/industry-standard-io) and [Functions](https://github.com/invrs/industry-functions).
 
 ## Usage
 
