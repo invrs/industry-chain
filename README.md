@@ -20,23 +20,24 @@ let test = factory()
   .set("instance", instance)
   .set("functions", functions)
   .set("standard_io", standard_io)
-  .base(class {
-    getHello() { return { hello: "hello" } }
-    
-    getWorld({ promise: { resolve } }) {
-      setTimeout(() => resolve({ world: "world" }), 10)
-    }
-    
-    log({ hello, world }) { console.log(`${hello} ${world}`) }
 
-    hello({ chain: { each } }) {
-      return each(
-        this.getHello,
-        this.getWorld,
-        this.log
-      )
-    }
-  })
+test = test(class {
+  getHello() { return { hello: "hello" } }
+  
+  getWorld({ promise: { resolve } }) {
+    setTimeout(() => resolve({ world: "world" }), 10)
+  }
+  
+  log({ hello, world }) { console.log(`${hello} ${world}`) }
+
+  hello({ chain: { each } }) {
+    return each(
+      this.getHello,
+      this.getWorld,
+      this.log
+    )
+  }
+})
 
 test().hello()
   // hello world!
