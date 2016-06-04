@@ -36,7 +36,7 @@ function each({ args }) {
 function mergeArgs({ args, value={} }) {
   if (typeof value == "object") {
     for (let key in value) {
-      if (key != "then") {
+      if ([ "then", "catch" ].indexOf(key) == -1) {
         args[key] = value[key]
       }
     }

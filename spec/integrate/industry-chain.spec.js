@@ -42,6 +42,8 @@ describe("IndustryChain", () => {
     })
 
     delete value.then
+    delete value.catch
+
     expect(value).toEqual({
       a: 1, b: 2, async: true, value: { b: 2 }
     })
@@ -92,6 +94,8 @@ describe("IndustryChain", () => {
     })
 
     delete output.then
+    delete output.catch
+
     expect(output).toEqual(expected)
   })
 })
