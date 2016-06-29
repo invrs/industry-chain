@@ -1,5 +1,19 @@
 import { returnObject } from "standard-io"
 
+function chainResult({ c, args, promise }) {
+  if (typeof c == "function") {
+    c = c(args)
+  }
+  if (!c) {
+    return {}
+  } else if (c.async || (c.value == undefined && c.then)) {
+    args.async = true
+    return c.then(thenMergeArgs(args))
+  } else {
+    return mergeArgs({ args, value: c })
+  }
+}
+
 function each({ args }) {
   return (...chains) => {
     let promise
@@ -7,19 +21,11 @@ function each({ args }) {
     chains.forEach(c => {
       if (promise) {
         promise = promise
-          .then(() => c(args))
-          .then(thenMergeArgs(args))
+          .then(() => chainResult({ c, args }))
       } else {
-        if (typeof c == "function") {
-          c = c(args)
-        }
-        if (!c) {
-          return
-        } else if (c.async || (c.value == undefined && c.then)) {
-          args.async = true
-          promise = c.then(thenMergeArgs(args))
-        } else {
-          mergeArgs({ args, value: c })
+        let result = chainResult({ c, args })
+        if (args.async) {
+          promise = result
         }
       }
     })
@@ -43,6 +49,7 @@ function mergeArgs({ args, value={} }) {
   } else {
     args.value = value
   }
+  return args
 }
 
 function patch(ignore) {

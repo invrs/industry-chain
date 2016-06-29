@@ -34,7 +34,7 @@ describe("IndustryChain", () => {
 
     let test = makeTest().base(base)
     let value = test().run()
-    let expected = { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, async: true, value: { b: 2 } }
+    let expected = { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, async: true, value: { f: 6 } }
     
     value.then(args => {
       expect(args).toEqual(expected)
@@ -97,5 +97,31 @@ describe("IndustryChain", () => {
     delete output.catch
 
     expect(output).toEqual(expected)
+  })
+
+  it("passes objects into chains", (done) => {
+    let base = class {
+      b({ promise: { resolve } }) { setTimeout(() => resolve({ b: 2 }), 1) }
+      d() { return { d: 4 } }
+
+      run({ chain: { each } }) {
+        return each(
+          { a: 1 },
+          this.b,
+          { c: 3 },
+          this.d
+        )
+      }
+    }
+
+    let test = makeTest().base(base)
+    
+    let output = test().run()
+    let expected = { a: 1, b: 2, c: 3, d: 4, async: true, value: { d: 4 } }
+
+    output.then(args => {
+      expect(args).toEqual(expected)
+      done()
+    })
   })
 })
