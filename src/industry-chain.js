@@ -24,7 +24,7 @@ function each({ args }) {
           .then(() => chainResult({ c, args }))
       } else {
         let result = chainResult({ c, args })
-        if (args.async) {
+        if (args.async && result.then) {
           promise = result
         }
       }
@@ -67,10 +67,7 @@ function patch(ignore) {
 }
 
 function thenMergeArgs(args) {
-  return value => {
-    mergeArgs({ args, value })
-    return args
-  }
+  return value => mergeArgs({ args, value })
 }
 
 export let chain = Class =>

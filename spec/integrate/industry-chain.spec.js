@@ -102,13 +102,39 @@ describe("IndustryChain", () => {
   it("passes objects into chains", (done) => {
     let base = class {
       b({ promise: { resolve } }) { setTimeout(() => resolve({ b: 2 }), 1) }
-      d() { return { d: 4 } }
+      c({ chain: { each } }) { return each({ c: 3 }) }
 
       run({ chain: { each } }) {
         return each(
           { a: 1 },
           this.b,
-          { c: 3 },
+          this.c,
+          { d: 4 }
+        )
+      }
+    }
+
+    let test = makeTest().base(base)
+    
+    let output = test().run()
+    let expected = { a: 1, b: 2, c: 3, d: 4, async: true }
+
+    output.then(args => {
+      expect(args).toEqual(expected)
+      done()
+    })
+  })
+
+  it("passes functions into chains", (done) => {
+    let base = class {
+      b({ promise: { resolve } }) { setTimeout(() => resolve({ b: 2 }), 1) }
+      d() { return { d: 4 } }
+
+      run({ chain: { each } }) {
+        return each(
+          () => { return { a: 1 } },
+          this.b,
+          () => { return { c: 3 } },
           this.d
         )
       }
