@@ -16,21 +16,21 @@ import { functions } from "industry-functions"
 import { standard_io } from "industry-standard-io"
 
 class Test {
-  getHello() { return { hello: "hello" } }
-  
-  getWorld({ promise: { resolve } }) {
-    setTimeout(() => resolve({ world: "world" }), 10)
-  }
-  
-  log({ hello, world }) { console.log(`${hello} ${world}`) }
-
-  hello({ chain: { each } }) {
-    return each(
+  hello() {
+    return [
       this.getHello,
       this.getWorld,
       this.log
-    )
+    ]
   }
+
+    getHello() { return { hello: "hello" } }
+    
+    getWorld({ promise: { resolve } }) {
+      setTimeout(() => resolve({ world: "world" }), 10)
+    }
+    
+    log({ hello, world }) { console.log(`${hello} ${world}`) }
 }
 
 let test = factory(Test)

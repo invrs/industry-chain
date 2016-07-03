@@ -14,7 +14,19 @@ function chainResult({ c, args, promise }) {
   }
 }
 
-function each({ args }) {
+function fnEach({ array, fn }) {
+  return fn(
+    ...array.map(item => {
+      if (Array.isArray(item)) {
+        return fnEach({ array: item, fn })
+      } else {
+        return item
+      }
+    })
+  )
+}
+
+function then({ args }) {
   return (...chains) => {
     let promise
 
@@ -52,10 +64,14 @@ function patch(ignore) {
     if (ignore.indexOf(name) == -1) {
       let fn = this[name]
       this[name] = (args) => {
-        args.chain = {
-          each: each({ args: args.args })
+        let thenFn = then({ args: args.args })
+        let output = fn.bind(this)(args)
+
+        if (Array.isArray(output)) {
+          return fnEach({ array: output, fn: thenFn })
+        } else {
+          return output
         }
-        return fn.bind(this)(args)
       }
     }
   }

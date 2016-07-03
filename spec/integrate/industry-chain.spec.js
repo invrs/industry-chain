@@ -22,13 +22,13 @@ describe("IndustryChain", () => {
       e() { return { e: 5 } }
       f({ promise: { resolve } }) { resolve({ f: 6 }) }
       empty({ value }) { return value || true }
-      chain({ chain: { each } }) { return each(this.c, this.empty, this.d) }
+      chain() { return [ this.c, this.empty, this.d ] }
 
-      run({ chain: { each } }) {
-        return each(
-          each(this.a, this.empty),
+      run() {
+        return [
+          [ this.a, this.empty ],
           this.b, this.chain, this.e, this.f
-        )
+        ]
       }
     }
 
@@ -54,8 +54,8 @@ describe("IndustryChain", () => {
       a() { return "a" }
       b({ promise: { resolve } }) { resolve("b") }
 
-      run({ chain: { each } }) {
-        return each(this.a, this.b)
+      run() {
+        return [ this.a, this.b ]
       }
     }
 
@@ -70,12 +70,12 @@ describe("IndustryChain", () => {
       c() { return { c: 3 } }
       d() { return { d: 4 } }
 
-      chain({ chain: { each } }) {
-        return each(this.c, this.d)
+      chain() {
+        return [ this.c, this.d ]
       }
 
-      chain2({ chain: { each } }) {
-        return each(this.a, this.b, this.chain)
+      chain2() {
+        return [ this.a, this.b, this.chain ]
       }
 
       run() {
@@ -102,15 +102,15 @@ describe("IndustryChain", () => {
   it("passes objects into chains", (done) => {
     let base = class {
       b({ promise: { resolve } }) { setTimeout(() => resolve({ b: 2 }), 1) }
-      c({ chain: { each } }) { return each({ c: 3 }) }
+      c() { return [ { c: 3 } ] }
 
-      run({ chain: { each } }) {
-        return each(
+      run() {
+        return [
           { a: 1 },
           this.b,
           this.c,
           { d: 4 }
-        )
+        ]
       }
     }
 
@@ -130,13 +130,13 @@ describe("IndustryChain", () => {
       b({ promise: { resolve } }) { setTimeout(() => resolve({ b: 2 }), 1) }
       d() { return { d: 4 } }
 
-      run({ chain: { each } }) {
-        return each(
+      run() {
+        return [
           () => { return { a: 1 } },
           this.b,
           () => { return { c: 3 } },
           this.d
-        )
+        ]
       }
     }
 
