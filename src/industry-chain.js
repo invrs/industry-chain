@@ -30,19 +30,14 @@ function each({ args }) {
       }
     })
 
-    promise = promise || Promise.resolve(args)
-
-    let output = returnObject({ value: args })
-    output.then = promise.then.bind(promise)
-
-    return output
+    return returnObject({ promise, value: args })
   }
 }
 
 function mergeArgs({ args, value={} }) {
   if (typeof value == "object") {
     for (let key in value) {
-      if ([ "then", "catch" ].indexOf(key) == -1) {
+      if ([ "then", "catch" ].indexOf(key) < 0) {
         args[key] = value[key]
       }
     }
